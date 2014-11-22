@@ -1,6 +1,9 @@
 package examples.ida.response;
 
 import gov.usgs.cida.nude.column.Column;
+import gov.usgs.cida.nude.column.ColumnTag;
+import java.util.Collections;
+import java.util.Set;
 
 public enum IdaMetadata implements Column {
 	MINDATETIME,
@@ -52,6 +55,11 @@ public enum IdaMetadata implements Column {
 	@Override
 	public boolean isDisplayable() {
 		return true;
+	}
+
+	@Override
+	public Set<ColumnTag> getTags() {
+		return Collections.<ColumnTag>emptySet();
 	}
 
 }

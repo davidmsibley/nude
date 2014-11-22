@@ -1,5 +1,8 @@
 package gov.usgs.cida.nude.column;
 
+import java.util.Collections;
+import java.util.Set;
+
 public enum DummyColumn implements Column {
 	JOIN;
 
@@ -46,6 +49,11 @@ public enum DummyColumn implements Column {
 	@Override
 	public boolean isDisplayable() {
 		return false;
+	}
+
+	@Override
+	public Set<ColumnTag> getTags() {
+		return Collections.<ColumnTag>emptySet();
 	}
 
 }

@@ -156,7 +156,7 @@ public class ColumnGrouping implements Iterable<Column> {
 							String schName = md.getSchemaName(i);
 							Class<?> valType = Class.forName(md.getColumnClassName(i));
 							
-							Column col = new SimpleColumn(colName, tabName, schName, valType, true);
+							Column col = new SimpleColumn(colName, tabName, schName, valType, true, null);
 							
 							cols.add(col);
 						}
