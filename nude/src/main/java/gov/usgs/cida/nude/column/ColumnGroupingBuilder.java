@@ -23,7 +23,7 @@ public class ColumnGroupingBuilder {
 		this.checkCol = new HashSet<Column>();
 	}
 
-	public ColumnGroupingBuilder setPrimaryKey(Column primaryKey) {
+	public ColumnGroupingBuilder addPrimaryKey(Column primaryKey) {
 		if (this.checkCol.add(primaryKey)) {
 			this.cols.add(primaryKey);
 		}
@@ -34,6 +34,16 @@ public class ColumnGroupingBuilder {
 	public ColumnGroupingBuilder addColumn(Column column) {
 		if (this.checkCol.add(column)) {
 			this.cols.add(column);
+		}
+		return this;
+	}
+	
+	public ColumnGroupingBuilder fromColumnGrouping(ColumnGrouping columnGrouping) {
+		if (null != columnGrouping) {
+			this.addPrimaryKey(columnGrouping.getPrimaryKey());
+			for (Column col : columnGrouping) {
+				this.addColumn(col);
+			}
 		}
 		return this;
 	}

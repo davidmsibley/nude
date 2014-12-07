@@ -1,8 +1,5 @@
 package gov.usgs.cida.nude.column;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

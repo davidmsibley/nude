@@ -191,6 +191,10 @@ public class ColumnGrouping implements Iterable<Column> {
 		
 		return result;
 	}
+	
+	public static ColumnGroupingBuilder builder() {
+		return new ColumnGroupingBuilder();
+	}
 
 	@Override
 	public String toString() {

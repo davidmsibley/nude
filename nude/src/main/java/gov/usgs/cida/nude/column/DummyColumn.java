@@ -1,8 +1,5 @@
 package gov.usgs.cida.nude.column;
 
-import java.util.Collections;
-import java.util.Set;
-
 public enum DummyColumn implements Column {
 	JOIN;
 
