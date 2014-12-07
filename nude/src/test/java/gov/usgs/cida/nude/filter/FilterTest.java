@@ -26,6 +26,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,7 @@ public class FilterTest {
 	protected ColumnGrouping muxCg;
 	protected ColumnGrouping muxOutCg;
 	
+	@Ignore
 	@Test
 	public void testFilteringResults() throws Exception {
 		ResultSet input = buildInputResultSet();
@@ -109,6 +111,7 @@ public class FilterTest {
 		}
 	}
 	
+	@Ignore
 	@Test
 	public void testMuxFiltering() throws SQLException {
 		ResultSet input = buildInputResultSet();

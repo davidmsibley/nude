@@ -1,10 +1,11 @@
 package gov.usgs.cida.nude.filter;
 
+import gov.usgs.cida.nude.plan.PlanStep;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NudeFilter {
+public class NudeFilter implements PlanStep {
 	
 	protected List<FilterStage> filterStages;
 	
@@ -28,5 +29,10 @@ public class NudeFilter {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public ResultSet runStep(ResultSet input) {
+		return this.filter(input);
 	}
 }
