@@ -31,9 +31,4 @@ public class TimeFilteringPlanStep implements PlanStep {
 
 		return result;
 	}
-
-	@Override
-	public ColumnGrouping getExpectedColumns() {
-		return this.colGroup;
-	}
 }

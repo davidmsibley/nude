@@ -38,9 +38,4 @@ public interface Column {
 	 * @return If this column should be displayed in the end result
 	 */
 	public boolean isDisplayable();
-	
-	/**
-	 * @return a set of tags that indicate which operations can be run on this column.
-	 */
-	public Set<ColumnTag> getTags();
 }

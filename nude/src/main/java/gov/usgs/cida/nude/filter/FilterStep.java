@@ -19,10 +19,5 @@ public class FilterStep implements PlanStep {
 	public ResultSet runStep(ResultSet input) {
 		return this.filter.filter(input);
 	}
-
-	@Override
-	public ColumnGrouping getExpectedColumns() {
-		return this.filter.getOutputColumns();
-	}
 	
 }

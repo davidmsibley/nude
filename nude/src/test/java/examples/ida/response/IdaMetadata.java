@@ -1,11 +1,9 @@
 package examples.ida.response;
 
 import gov.usgs.cida.nude.column.Column;
-import gov.usgs.cida.nude.column.ColumnTag;
-import java.util.Collections;
-import java.util.Set;
+import gov.usgs.cida.nude.column.SimpleColumn;
 
-public enum IdaMetadata implements Column {
+public enum IdaMetadata {
 	MINDATETIME,
 	MAXDATETIME;
 	
@@ -22,44 +20,8 @@ public enum IdaMetadata implements Column {
 	public static final String TABLE_NAME = "RESPONSE";
 	public static final String SCHEMA_NAME = "IDA_METADATA";
 	
-	@Override
-	public String getName() {
-		return toString();
-	}
-
-	@Override
-	public String getQualifiedName() {
-		return TABLE_NAME + "." + getName();
-	}
-
-	@Override
-	public String getFullName() {
-		return SCHEMA_NAME + "." + getQualifiedName();
-	}
-
-	@Override
-	public String getTableName() {
-		return TABLE_NAME;
-	}
-
-	@Override
-	public String getSchemaName() {
-		return SCHEMA_NAME;
+	public Column getColumn() {
+		return new SimpleColumn(this.toString());
 	}
 	
-	@Override
-	public Class<?> getValueType() {
-		return this.valueType;
-	}
-
-	@Override
-	public boolean isDisplayable() {
-		return true;
-	}
-
-	@Override
-	public Set<ColumnTag> getTags() {
-		return Collections.<ColumnTag>emptySet();
-	}
-
 }

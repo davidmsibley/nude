@@ -1,12 +1,15 @@
 package gov.usgs.cida.nude.filter;
 
+import com.google.common.collect.Lists;
 import gov.usgs.cida.nude.column.CGResultSetMetaData;
 import gov.usgs.cida.nude.column.Column;
+import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.out.Closers;
 import gov.usgs.cida.nude.resultset.inmemory.PeekingResultSet;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,8 @@ public class FilteredResultSet extends PeekingResultSet {
 	
 	protected final FilterStage filterStage;
 	protected final ResultSet in;
+	protected final ColumnGrouping inColumns;
+	protected final ColumnGrouping outColumns;
 	
 	public FilteredResultSet(ResultSet input, FilterStage transform) {
 		try {
@@ -31,8 +36,10 @@ public class FilteredResultSet extends PeekingResultSet {
 		
 		this.in = input;
 		this.filterStage = transform;
-				
-		this.metadata = new CGResultSetMetaData(this.filterStage.outColumns);
+		this.inColumns = ColumnGrouping.getColumnGrouping(input);
+		ColumnGrouping transformedCols = new ColumnGrouping(this.inColumns.getPrimaryKey(), Lists.newArrayList(filterStage.transforms.keySet()));
+		this.outColumns = ColumnGrouping.join(Lists.newArrayList(this.inColumns, transformedCols));
+		this.metadata = new CGResultSetMetaData(outColumns);
 	}
 	
 	protected TableRow buildRow() throws SQLException {
@@ -40,7 +47,7 @@ public class FilteredResultSet extends PeekingResultSet {
 		
 		Map<Column, String> row = new HashMap<Column, String>();
 		
-		for (Column col : this.filterStage.inColumns) {
+		for (Column col : this.inColumns) {
 			try {
 				row.put(col, this.in.getString(col.getName()));
 			} catch (SQLException e) {
@@ -50,7 +57,7 @@ public class FilteredResultSet extends PeekingResultSet {
 			}
 		}
 		
-		result = new TableRow(this.filterStage.inColumns, row);
+		result = new TableRow(this.inColumns, row);
 		
 		return result;
 	}
@@ -75,7 +82,7 @@ public class FilteredResultSet extends PeekingResultSet {
 	public String getString(int columnIndex) throws SQLException {
 		throwIfClosed(this);
 		throwIfBadLocation(loc);
-		return this.filterStage.transform(columnIndex, this.currRow);
+		return this.filterStage.transform(this.outColumns.get(columnIndex), this.currRow);
 	}
 
 	@Override
@@ -87,7 +94,7 @@ public class FilteredResultSet extends PeekingResultSet {
 	@Override
 	public int findColumn(String columnLabel) throws SQLException {
 		throwIfClosed(this);
-		return this.filterStage.outColumns.indexOf(columnLabel);
+		return this.outColumns.indexOf(columnLabel);
 	}
 
 }

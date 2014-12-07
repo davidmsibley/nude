@@ -10,6 +10,5 @@ import java.sql.ResultSet;
 public interface PlanStep {
 	
 	public ResultSet runStep(ResultSet input);
-	public ColumnGrouping getExpectedColumns();
 	
 }

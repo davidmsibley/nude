@@ -44,16 +44,20 @@ public class FilterTest {
 	@Before
 	public void setUp() throws Exception {
 		List<Column> cols = new ArrayList<Column>();
-		cols.addAll(Arrays.asList(IdaData.values()));
-		this.inColGroup = new ColumnGrouping(IdaData.date_time, cols);
+		for (IdaData id : IdaData.values()) {
+			cols.add(id.getColumn());
+		}
+		this.inColGroup = new ColumnGrouping(IdaData.date_time.getColumn(), cols);
 		
 		cols = new ArrayList<Column>();
-		cols.addAll(Arrays.asList(ClientData.values()));
-		this.outColGroup = new ColumnGrouping(ClientData.timestamp, cols);
+		for (ClientData cd : ClientData.values()) {
+			cols.add(cd.getColumn());
+		}
+		this.outColGroup = new ColumnGrouping(ClientData.timestamp.getColumn(), cols);
 		
-		this.muxCg = new ColumnGrouping(IdaData.date_time, Arrays.asList(new Column[] {IdaData.date_time, DummyColumn.JOIN})); 
+		this.muxCg = new ColumnGrouping(IdaData.date_time.getColumn(), Arrays.asList(new Column[] {IdaData.date_time.getColumn(), DummyColumn.JOIN})); 
 		
-		this.muxOutCg = this.outColGroup.join(new ColumnGrouping(ClientData.timestamp, Arrays.asList(new Column[] {ClientData.timestamp, DummyColumn.JOIN})));
+		this.muxOutCg = this.outColGroup.join(new ColumnGrouping(ClientData.timestamp.getColumn(), Arrays.asList(new Column[] {ClientData.timestamp.getColumn(), DummyColumn.JOIN})));
 	}
 	
 	@After
@@ -72,13 +76,13 @@ public class FilterTest {
 		ResultSet input = buildInputResultSet();
 		ResultSet exOut = buildExpectedOutput();
 		
-		NudeFilterBuilder nfb = new NudeFilterBuilder(inColGroup);
+		NudeFilterBuilder nfb = new NudeFilterBuilder();
 		NudeFilter filter = nfb
-				.addFilterStage(new FilterStageBuilder(inColGroup)
-					.addTransform(ClientData.timestamp, new ColumnAlias(IdaData.date_time))
-					.addTransform(ClientData.value, new ColumnAlias(IdaData.value))
+				.addFilterStage(new FilterStageBuilder()
+					.addTransform(ClientData.timestamp.getColumn(), new ColumnAlias(IdaData.date_time.getColumn()))
+					.addTransform(ClientData.value.getColumn(), new ColumnAlias(IdaData.value.getColumn()))
 					.buildFilterStage())
-				.addFilterStage(new FilterStageBuilder(outColGroup).buildFilterStage())
+				.addFilterStage(new FilterStageBuilder().buildFilterStage())
 				.buildFilter();
 				
 		ResultSet output = filter.filter(input);
@@ -111,13 +115,13 @@ public class FilterTest {
 		ResultSet muxIn = buildMuxTestResultSet();
 		ResultSet exOut = buildMuxOut();
 		
-		NudeFilterBuilder nfb = new NudeFilterBuilder(inColGroup.join(muxCg));
+		NudeFilterBuilder nfb = new NudeFilterBuilder();
 		NudeFilter filter = nfb
-				.addFilterStage(new FilterStageBuilder(inColGroup.join(muxCg))
-					.addTransform(ClientData.timestamp, new ColumnAlias(IdaData.date_time))
-					.addTransform(ClientData.value, new ColumnAlias(IdaData.value))
+				.addFilterStage(new FilterStageBuilder()
+					.addTransform(ClientData.timestamp.getColumn(), new ColumnAlias(IdaData.date_time.getColumn()))
+					.addTransform(ClientData.value.getColumn(), new ColumnAlias(IdaData.value.getColumn()))
 					.buildFilterStage())
-				.addFilterStage(new FilterStageBuilder(this.muxOutCg).buildFilterStage())
+				.addFilterStage(new FilterStageBuilder().buildFilterStage())
 				.buildFilter();
 		
 		List<ResultSet> inputs = new ArrayList<ResultSet>();
@@ -177,8 +181,8 @@ public class FilterTest {
 		Map<Column, String> row = null;
 		for (int i = 0; i < dates.length && i < values.length; i++) {
 			row = new HashMap<Column, String>();
-			row.put(ClientData.timestamp, dates[i]);
-			row.put(ClientData.value, values[i]);
+			row.put(ClientData.timestamp.getColumn(), dates[i]);
+			row.put(ClientData.value.getColumn(), values[i]);
 			rs.addRow(new TableRow(this.outColGroup, row));
 		}
 		
@@ -195,14 +199,14 @@ public class FilterTest {
 		
 		for (int i = 0; i < dates.length && i < values.length; i++) {
 			row = new HashMap<Column, String>();
-			row.put(IdaData.site_no, "04085427");
-			row.put(IdaData.date_time, dates[i]);
-			row.put(IdaData.tz_cd, "CDT");
-			row.put(IdaData.dd, "2");
-			row.put(IdaData.accuracy_cd, "1");
-			row.put(IdaData.value, values[i]);
-			row.put(IdaData.precision, "3");
-			row.put(IdaData.remark, null);
+			row.put(IdaData.site_no.getColumn(), "04085427");
+			row.put(IdaData.date_time.getColumn(), dates[i]);
+			row.put(IdaData.tz_cd.getColumn(), "CDT");
+			row.put(IdaData.dd.getColumn(), "2");
+			row.put(IdaData.accuracy_cd.getColumn(), "1");
+			row.put(IdaData.value.getColumn(), values[i]);
+			row.put(IdaData.precision.getColumn(), "3");
+			row.put(IdaData.remark.getColumn(), null);
 			rs.addRow(new TableRow(this.inColGroup, row));
 		}
 		
@@ -219,7 +223,7 @@ public class FilterTest {
 		
 		for (int i = 0; i < dates.length && i < values.length; i++) {
 			row = new HashMap<Column, String>();
-			row.put(IdaData.date_time, dates[i]);
+			row.put(IdaData.date_time.getColumn(), dates[i]);
 			row.put(DummyColumn.JOIN, "" + i);
 			rs.addRow(new TableRow(this.muxCg, row));
 		}
@@ -237,8 +241,8 @@ public class FilterTest {
 		for (int i = 0; i < dates.length && i < values.length; i++) {
 			row = new HashMap<Column, String>();
 			row.put(DummyColumn.JOIN, "" + i);
-			row.put(ClientData.timestamp, dates[i]);
-			row.put(ClientData.value, values[i]);
+			row.put(ClientData.timestamp.getColumn(), dates[i]);
+			row.put(ClientData.value.getColumn(), values[i]);
 			rs.addRow(new TableRow(this.muxOutCg, row));
 		}
 		

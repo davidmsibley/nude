@@ -51,12 +51,6 @@ public class ConnectorPlanStep implements PlanStep {
 		this.sys = ((ActorProvider) providers.get(Provider.ACTOR)).getSystem();
 		this.connectors = connectors;
 	}
-
-	@Override
-	public ColumnGrouping getExpectedColumns() {
-		//No freakin idea.
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
 	
 	@Override
 	public ResultSet runStep(ResultSet input) {
@@ -183,13 +177,13 @@ public class ConnectorPlanStep implements PlanStep {
 			List<Column> inC = inCg.getColumns();
 			List<Column> addC = cg.getColumns();
 			
-			NudeFilterBuilder nfb = new NudeFilterBuilder(inCg);
+			NudeFilterBuilder nfb = new NudeFilterBuilder();
 			for (int i = 0; i < addC.size() && i < inC.size(); i++) {
 				Column in = inC.get(i);
 				Column add = addC.get(i);
 				if (!in.equals(add)) {
 //					log.trace(in + " transform to " + add);
-					nfb.addFilterStage(new FilterStageBuilder(nfb.getCurrOutCols())
+					nfb.addFilterStage(new FilterStageBuilder()
 							.addTransform(add, new ColumnAlias(in))
 							.buildFilterStage());
 				} else {

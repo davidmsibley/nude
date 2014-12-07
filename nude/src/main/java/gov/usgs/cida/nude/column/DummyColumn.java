@@ -51,9 +51,4 @@ public enum DummyColumn implements Column {
 		return false;
 	}
 
-	@Override
-	public Set<ColumnTag> getTags() {
-		return Collections.<ColumnTag>emptySet();
-	}
-
 }

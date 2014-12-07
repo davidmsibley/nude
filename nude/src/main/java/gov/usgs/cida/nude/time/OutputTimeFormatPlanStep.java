@@ -23,9 +23,8 @@ public class OutputTimeFormatPlanStep implements PlanStep {
 
 	public OutputTimeFormatPlanStep(final ColumnGrouping inCols, final DateTimeFormatter dtf) {
 		
-		NudeFilterBuilder nfb = new NudeFilterBuilder(inCols);
-		this.fs = new FilterStep(nfb.addFilterStage(new FilterStageBuilder(
-				nfb.getCurrOutCols()).addTransform(inCols.getPrimaryKey(), new ColumnTransform() {
+		NudeFilterBuilder nfb = new NudeFilterBuilder();
+		this.fs = new FilterStep(nfb.addFilterStage(new FilterStageBuilder().addTransform(inCols.getPrimaryKey(), new ColumnTransform() {
 					@Override
 					public String transform(TableRow row) {
 						String result = null;
@@ -43,11 +42,6 @@ public class OutputTimeFormatPlanStep implements PlanStep {
 	@Override
 	public ResultSet runStep(ResultSet input) {
 		return this.fs.runStep(input);
-	}
-
-	@Override
-	public ColumnGrouping getExpectedColumns() {
-		return this.fs.getExpectedColumns();
 	}
 
 }

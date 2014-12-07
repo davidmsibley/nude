@@ -21,7 +21,7 @@ public class ColumnGrouping implements Iterable<Column> {
 	private static final Logger log = LoggerFactory
 			.getLogger(ColumnGrouping.class);
 	protected final Column primaryKeyColumn;
-	protected final Map<String, Integer> colToIndex;
+	protected final Map<String, Integer> colToIndex; //This is intrinsically wrong? two separate column types could have the same label...
 	protected final List<Column> columns;
 	//When adding column groupings to eachother, the primary key column must match!
 	
@@ -38,7 +38,6 @@ public class ColumnGrouping implements Iterable<Column> {
 	}
 	
 	/**
-	 * TODO NO DUPLICATE COLUMNS!
 	 * @param primaryKeyColumn
 	 * @param columns
 	 */
@@ -52,11 +51,10 @@ public class ColumnGrouping implements Iterable<Column> {
 		colSet.addAll(columns);
 		
 		List<Column> cols = new ArrayList<Column>();
-		cols.addAll(colSet);
-		
-		if (1 > cols.size()) {
+		if (!colSet.contains(primaryKeyColumn)) {
 			cols.add(this.primaryKeyColumn);
 		}
+		cols.addAll(colSet);
 		
 		this.columns = Collections.unmodifiableList(cols);
 		
@@ -156,7 +154,7 @@ public class ColumnGrouping implements Iterable<Column> {
 							String schName = md.getSchemaName(i);
 							Class<?> valType = Class.forName(md.getColumnClassName(i));
 							
-							Column col = new SimpleColumn(colName, tabName, schName, valType, true, null);
+							Column col = new SimpleColumn(colName, tabName, schName, valType, true);
 							
 							cols.add(col);
 						}

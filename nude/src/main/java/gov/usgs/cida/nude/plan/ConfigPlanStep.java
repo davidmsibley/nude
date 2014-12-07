@@ -48,9 +48,4 @@ public class ConfigPlanStep implements PlanStep {
 		
 		return result;
 	}
-
-	@Override
-	public ColumnGrouping getExpectedColumns() {
-		return this.cg;
-	}
 }

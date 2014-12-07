@@ -3,7 +3,6 @@ package examples.ida.request;
 import java.util.Date;
 
 import gov.usgs.cida.nude.column.Column;
-import gov.usgs.cida.nude.column.ColumnTag;
 import java.util.Collections;
 import java.util.Set;
 
@@ -57,10 +56,4 @@ public enum IdaConnectorParams implements Column {
 	public boolean isDisplayable() {
 		return true;
 	}
-
-	@Override
-	public Set<ColumnTag> getTags() {
-		return Collections.<ColumnTag>emptySet();
-	}
-
 }
