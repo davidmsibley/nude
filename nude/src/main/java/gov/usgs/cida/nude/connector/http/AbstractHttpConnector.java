@@ -126,7 +126,7 @@ public abstract class AbstractHttpConnector implements HttpConnector {
 			try {
 				if (isReady()) {
 					HttpEntity methodEntity = makeGetCall();
-					result = new HttpResultSet(methodEntity, this.getParser());
+					result = HttpResultSet.newHttpResultSet(methodEntity, this.getParser());
 				} else {
 					log.error("Source not ready: " + uri);
 				}

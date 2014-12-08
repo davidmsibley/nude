@@ -1,6 +1,5 @@
 package gov.usgs.cida.nude.plan;
 
-import gov.usgs.cida.nude.column.ColumnGrouping;
 import java.sql.ResultSet;
 
 /**

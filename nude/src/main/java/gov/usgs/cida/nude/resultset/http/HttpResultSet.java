@@ -1,8 +1,8 @@
 package gov.usgs.cida.nude.resultset.http;
 
+import gov.usgs.cida.nude.resultset.ParsingResultSet;
 import gov.usgs.cida.nude.connector.parser.IParser;
 import java.io.*;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.zip.GZIPInputStream;
 import org.apache.http.Header;
@@ -15,35 +15,16 @@ public class HttpResultSet extends ParsingResultSet {
 	private static final Logger log = LoggerFactory.getLogger(HttpResultSet.class);
 	
 	protected final HttpEntity httpEntity;
-	protected final Reader serverResponseReader;
 	
-	protected boolean isBeforeFirst = true;
-	protected boolean isFirst = false;
-	
-	protected boolean isAfterLast = false;
-
-	public static void throwIfClosed(ResultSet rs) throws SQLException {
-		boolean isClosed = false;
-		try {
-			isClosed = rs.isClosed();
-		} catch (AbstractMethodError t) {
-			log.trace("Cannot tell if ResultSet is closed.");
-		}
-		if (isClosed) {
-			throw new SQLException("Closed ResultSet");
-		}
-	}
-
-	public static void throwNotSupported() throws SQLException {
-		throw new SQLException("Operation not supported");
-	}
-	
-	public HttpResultSet(HttpEntity httpEntity, IParser responseParser) {
+	private HttpResultSet(HttpEntity httpEntity, IParser parser, Reader serverResponseReader) {
+		super(parser, serverResponseReader);
 		this.httpEntity = httpEntity;
-		
+	}
+	
+	public static HttpResultSet newHttpResultSet(HttpEntity httpEntity, IParser responseParser) {
 		InputStream in = null;
 		try {
-			in = this.httpEntity.getContent();
+			in = httpEntity.getContent();
 		} catch (Exception e) {
 			log.error("Error getting response", e);
 			if (null == in) {
@@ -55,7 +36,7 @@ public class HttpResultSet extends ParsingResultSet {
 		try {
 			String charset = null;
 
-			Header contentHeader = this.httpEntity.getContentEncoding();
+			Header contentHeader = httpEntity.getContentEncoding();
 			if (null != contentHeader) {
 				String encoding = contentHeader.getValue();
 				log.trace("encoding:" + encoding);
@@ -65,94 +46,22 @@ public class HttpResultSet extends ParsingResultSet {
 			}
 			
 			charset = "UTF-8";
-			
-			if (null != charset) {
-				reader = new InputStreamReader(in, charset);
-//			} else {
-//				reader = new InputStreamReader(in);
-			}
+			reader = new InputStreamReader(in, charset);
 		} catch (Exception e) {
 			log.error("Error decoding response", e);
 		}
 		
-		this.serverResponseReader = new BufferedReader(reader);
-		this.parser = responseParser;
+		return new HttpResultSet(httpEntity, responseParser, new BufferedReader(reader));
 	}
 	
 	@Override
 	public void close() throws SQLException {
-		super.close();
 		try {
 			EntityUtils.consume(this.httpEntity);
 		} catch (IOException e) {
 			log.error("Error closing HttpResultSet", e);
 		}
-	}
-	
-	@Override
-	public boolean isAfterLast() throws SQLException {
-		throwIfClosed(this);
-		return this.isAfterLast;
-	}
-
-	@Override
-	public boolean isBeforeFirst() throws SQLException {
-		throwIfClosed(this);
-		return this.isBeforeFirst;
-	}
-
-	@Override
-	public boolean isFirst() throws SQLException {
-		throwIfClosed(this);
-		return this.isFirst;
-	}
-
-	@Override
-	public boolean isLast() throws SQLException {
-		throwIfClosed(this);
-		throwNotSupported();
-		return false;
-	}
-	
-	@Override
-	public boolean next() throws SQLException {
-		throwIfClosed(this);
-		boolean result = false;
-		
-		try {
-			result = this.parser.next(this.serverResponseReader);
-		} catch (Exception e) {
-			log.error("Parser threw Exception, assuming stream is damaged and ending ResultSet.", e);
-			result = false;
-		}
-		
-		if (result) {
-			if (this.isBeforeFirst) {
-				this.isBeforeFirst = false;
-				this.isFirst = true;
-				this.isAfterLast = false;
-			} else if (this.isFirst) {
-				this.isBeforeFirst = false;
-				this.isFirst = false;
-				this.isAfterLast = false;
-			}
-		} else {
-			this.isBeforeFirst = false;
-			this.isFirst = false;
-			this.isAfterLast = true;
-		}
-		
-		return result;
-	}
-
-	@Override
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		return false;
-	}
-
-	@Override
-	public <T> T unwrap(Class<T> iface) throws SQLException {
-		throw new SQLException("Instance is not an unwrappable object");
+		super.close();
 	}
 
 }

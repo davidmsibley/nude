@@ -36,7 +36,7 @@ public class IdaMetadataConnector extends AbstractHttpConnector {
 		
 		try {
 			HttpEntity methodEntity = makeGetCall();
-			result = new HttpResultSet(methodEntity, this.getParser());
+			result = HttpResultSet.newHttpResultSet(methodEntity, this.getParser());
 		} catch (Exception e) {
 			log.error("Could not make call", e);
 		}

@@ -1,8 +1,9 @@
-package gov.usgs.cida.nude.resultset.http;
+package gov.usgs.cida.nude.resultset;
 
 import gov.usgs.cida.nude.column.CGResultSetMetaData;
 import gov.usgs.cida.nude.connector.parser.IParser;
-import gov.usgs.cida.nude.resultset.IndexImplResultSet;
+import static gov.usgs.cida.nude.resultset.ReadOnlyForwardResultSet.throwIfClosed;
+import static gov.usgs.cida.nude.resultset.ReadOnlyForwardResultSet.throwNotSupported;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -26,13 +27,92 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class ParsingResultSet extends IndexImplResultSet implements ResultSet {
+public class ParsingResultSet extends IndexImplResultSet implements ResultSet {
+	private static final Logger log = LoggerFactory.getLogger(ParsingResultSet.class);
 	protected boolean isClosed = false;
+	protected boolean isBeforeFirst = true;
+	protected boolean isFirst = false;
+	protected boolean isAfterLast = false;
 	
 	private ResultSetMetaData metadata;
 	
-	protected IParser parser;
+	protected final IParser parser;
+	protected final Reader serverResponseReader;
+
+	public ParsingResultSet(IParser parser, Reader serverResponseReader) {
+		this.parser = parser;
+		this.serverResponseReader = serverResponseReader;
+	}
+	
+	@Override
+	public boolean isAfterLast() throws SQLException {
+		throwIfClosed(this);
+		return this.isAfterLast;
+	}
+
+	@Override
+	public boolean isBeforeFirst() throws SQLException {
+		throwIfClosed(this);
+		return this.isBeforeFirst;
+	}
+
+	@Override
+	public boolean isFirst() throws SQLException {
+		throwIfClosed(this);
+		return this.isFirst;
+	}
+
+	@Override
+	public boolean isLast() throws SQLException {
+		throwIfClosed(this);
+		throwNotSupported();
+		return false;
+	}
+	
+	@Override
+	public boolean next() throws SQLException {
+		throwIfClosed(this);
+		boolean result = false;
+		
+		try {
+			result = this.parser.next(this.serverResponseReader);
+		} catch (Exception e) {
+			log.error("Parser threw Exception, assuming stream is damaged and ending ResultSet.", e);
+			result = false;
+		}
+		
+		if (result) {
+			if (this.isBeforeFirst) {
+				this.isBeforeFirst = false;
+				this.isFirst = true;
+				this.isAfterLast = false;
+			} else if (this.isFirst) {
+				this.isBeforeFirst = false;
+				this.isFirst = false;
+				this.isAfterLast = false;
+			}
+		} else {
+			this.isBeforeFirst = false;
+			this.isFirst = false;
+			this.isAfterLast = true;
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		return false;
+	}
+
+	@Override
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		throw new SQLException("Instance is not an unwrappable object");
+	}
 	
 	//TODO actually make this mean something
 	protected int fetchSize = 0;
@@ -62,6 +142,7 @@ public abstract class ParsingResultSet extends IndexImplResultSet implements Res
 	
 	@Override
 	public void close() throws SQLException {
+		IOUtils.closeQuietly(this.serverResponseReader);
 		this.isClosed = true;
 	}
 	
