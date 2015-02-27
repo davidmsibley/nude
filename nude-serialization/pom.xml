@@ -7,20 +7,14 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>gov.usgs.cida.nude</groupId>
-	<artifactId>nude</artifactId>
+	<artifactId>nude-serialization</artifactId>
 	<packaging>jar</packaging>
-	<name>NUDE</name>
+	<name>NUDE Serialization</name>
 	<description>
-		Natural Uniform Data Extraction (and Export) Framework
+		Natural Uniform Data Extraction (and Export) Framework Serialization library
 	</description>
 
 	<dependencies>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>gov.usgs.cida</groupId>
 			<artifactId>swsf-transforms</artifactId>
@@ -45,30 +39,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient-cache</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<type>jar</type>
@@ -87,26 +57,8 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -118,20 +70,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4.3</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<systemProperties>
-						<property>
-							<name>catalina.base</name>
-							<value>target/test-classes</value>
-						</property>
-						<property>
-							<name>catalina.home</name>
-							<value>target/test-classes</value>
-						</property>
-					</systemProperties>
-				</configuration>
 			</plugin>
 		</plugins>
 		<testResources>

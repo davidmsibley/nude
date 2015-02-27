@@ -7,11 +7,11 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>gov.usgs.cida.nude</groupId>
-	<artifactId>nude</artifactId>
+	<artifactId>nude-impl</artifactId>
 	<packaging>jar</packaging>
-	<name>NUDE</name>
+	<name>NUDE Default Implementation</name>
 	<description>
-		Natural Uniform Data Extraction (and Export) Framework
+		Natural Uniform Data Extraction (and Export) Framework Default Implementation
 	</description>
 
 	<dependencies>
@@ -118,20 +118,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4.3</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<systemProperties>
-						<property>
-							<name>catalina.base</name>
-							<value>target/test-classes</value>
-						</property>
-						<property>
-							<name>catalina.home</name>
-							<value>target/test-classes</value>
-						</property>
-					</systemProperties>
-				</configuration>
 			</plugin>
 		</plugins>
 		<testResources>

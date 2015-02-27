@@ -2,3 +2,6 @@
 /.settings/
 /nude-akka/target/
 /nude/target/
+/nude-impl/target/
+/nude-serialization/target/
+/nude-api/target/
