@@ -1,6 +1,8 @@
 package gov.usgs.cida.nude.column;
 
-public interface Column {
+import java.io.Serializable;
+
+public interface Column extends Serializable {
 
 	/**
 	 * @return the name of the column
@@ -26,11 +28,6 @@ public interface Column {
 	 * @return the name of the schema the columns belongs to
 	 */
 	public String getSchemaName();
-	
-	/**
-	 * @return the Class that this column is expected to hold
-	 */
-	public Class<?> getValueType();
 	
 	/**
 	 * @return If this column should be displayed in the end result
