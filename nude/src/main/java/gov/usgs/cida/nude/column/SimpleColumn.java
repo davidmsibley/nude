@@ -1,10 +1,13 @@
 package gov.usgs.cida.nude.column;
 
+import java.io.Serializable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class SimpleColumn implements Column {
+public class SimpleColumn implements Column, Serializable {
+	
+	private static final long serialVersionUID = -4261444225742490354L;
 
 	protected final String columnName;
 	protected final String tableName;
@@ -71,7 +74,6 @@ public class SimpleColumn implements Column {
 		return this.schemaName;
 	}
 
-	@Override
 	public Class<?> getValueType() {
 		return this.valueType;
 	}
