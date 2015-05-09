@@ -9,9 +9,8 @@
 	<modules>
 		<module>nude-api</module>
 		<module>nude-serialization</module>
-		<module>nude-impl</module>
-		<module>nude-akka</module>
-		<module>nude</module>
+		<module>nude-resultset</module>
+		<module>nude-filters</module>
 	</modules>
   
 	<inceptionYear>2011</inceptionYear>
@@ -114,13 +113,15 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>nude</artifactId>
+				<artifactId>nude-resultset</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>nude-impl</artifactId>
+				<artifactId>nude-resultset</artifactId>
 				<version>${project.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
@@ -250,6 +251,19 @@
 					<target>7</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar</goal>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>

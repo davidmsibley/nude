@@ -30,6 +30,11 @@ public interface Column extends Serializable {
 	public String getSchemaName();
 	
 	/**
+	 * @return the Class that this column is expected to hold
+	 */
+	public Class<?> getValueType();
+	
+	/**
 	 * @return If this column should be displayed in the end result
 	 */
 	public boolean isDisplayable();

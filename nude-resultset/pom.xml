@@ -7,11 +7,11 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>gov.usgs.cida.nude</groupId>
-	<artifactId>nude-impl</artifactId>
+	<artifactId>nude-resultset</artifactId>
 	<packaging>jar</packaging>
-	<name>NUDE Default Implementation</name>
+	<name>NUDE ResultSet Implementation</name>
 	<description>
-		Natural Uniform Data Extraction (and Export) Framework Default Implementation
+		Natural Uniform Data Extraction (and Export) Framework ResultSet Implementation
 	</description>
 
 	<dependencies>

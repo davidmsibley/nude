@@ -5,3 +5,5 @@
 /nude-impl/target/
 /nude-serialization/target/
 /nude-api/target/
+/nude-filters/target/
+/nude-resultset/target/
